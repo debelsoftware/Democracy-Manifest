@@ -44,7 +44,7 @@ app.use(function(req, res, next) {
 app.get('/status', getStatus);
 app.get('/data', getAllData);
 app.get('/top3', getTop3);
-//app.use("/post/", apiLimiter);
+app.use("/post/", apiLimiter);
 app.post('/singledata', getData);
 app.post('/post/population', postPop);
 app.post('/post/wealth', postWealth);
@@ -119,6 +119,7 @@ async function getData(req, res, next) {
 }
 
 async function postPop(req, res, next){
+  console.log("post");
   if (req.body.modifier == "1"){
     try {
       con.query("UPDATE `country`.`country` SET population = population + 1 WHERE code = '"+req.body.country+"'", function (err, result) {
@@ -166,6 +167,7 @@ async function postPop(req, res, next){
 }
 
 async function postWealth(req, res, next){
+  console.log("post");
   if (req.body.modifier == "1"){
     try {
       con.query("UPDATE `country`.`country` SET wealth = wealth + 0.01 WHERE code = '"+req.body.country+"'", function (err, result) {

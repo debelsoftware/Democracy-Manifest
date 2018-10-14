@@ -4,8 +4,10 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const rateLimit = require("express-rate-limit");
+const cors = require('cors');
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 const options = {
     cert: fs.readFileSync('./sslcert/fullchain.pem'),
@@ -26,6 +28,7 @@ let con = mysql.createConnection({
   password: password,
   multipleStatements: true
 });
+
 con.connect(function(err) {
   if (err) {
     console.log(err);
@@ -35,15 +38,9 @@ con.connect(function(err) {
   }
 });
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
 app.get('/status', getStatus);
 app.get('/data', getAllData);
-app.get('/top3', getTop3);
+app.get('/top20', getTop20);
 app.use("/post/", apiLimiter);
 app.post('/singledata', getData);
 app.post('/post/population', postPop);
@@ -58,7 +55,7 @@ function validate(data){
   }
 }
 
-async function getStatus(req, res, next) {
+async function getStatus(req, res) {
   try {
     res.json({"status":"running"});
   } catch (e) {
@@ -67,7 +64,7 @@ async function getStatus(req, res, next) {
   }
 }
 
-async function getAllData(req, res, next) {
+async function getAllData(req, res) {
   try {
     con.query("SELECT * FROM `country`.`country`", function (err, result) {
       if (err){
@@ -83,9 +80,9 @@ async function getAllData(req, res, next) {
   }
 }
 
-async function getTop3(req, res, next) {
+async function getTop20(req, res) {
   try {
-    con.query("SELECT * FROM `country`.`country` ORDER BY wealth DESC LIMIT 3" , function (err, result) {
+    con.query("SELECT * FROM `country`.`country` ORDER BY wealth DESC LIMIT 20" , function (err, result) {
       if (err){
         console.log("ERROR FETCHING DATA");
       }
@@ -99,7 +96,7 @@ async function getTop3(req, res, next) {
   }
 }
 
-async function getData(req, res, next) {
+async function getData(req, res) {
   try {
     con.query("SELECT * FROM `country`.`country` WHERE code = '"+req.body.country+"'", function (err, result) {
       if (err){
@@ -118,8 +115,7 @@ async function getData(req, res, next) {
   }
 }
 
-async function postPop(req, res, next){
-  console.log("post");
+async function postPop(req, res){
   if (req.body.modifier == "1"){
     try {
       con.query("UPDATE `country`.`country` SET population = population + 1 WHERE code = '"+req.body.country+"'", function (err, result) {
@@ -166,8 +162,7 @@ async function postPop(req, res, next){
   }
 }
 
-async function postWealth(req, res, next){
-  console.log("post");
+async function postWealth(req, res){
   if (req.body.modifier == "1"){
     try {
       con.query("UPDATE `country`.`country` SET wealth = wealth + 0.01 WHERE code = '"+req.body.country+"'", function (err, result) {

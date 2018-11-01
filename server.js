@@ -14,7 +14,7 @@ const options = {
     key: fs.readFileSync('./sslcert/privkey.pem')
 };
 
-const password = "database130899";
+const password = "";
 
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 60 * 1000, // 1 hour
@@ -133,7 +133,7 @@ async function postPop(req, res){
     } catch (e) {
       console.error(e);
       res.sendStatus(500);
-      console.log(new Date().toLocaleString(),"Actually, uhh, i think you'll find that, uh, that's just wrong because i would be right in this situation.");
+      console.log(new Date().toLocaleString(),"Error with request");
     }
   }
   else if (req.body.modifier == "0") {
@@ -153,12 +153,12 @@ async function postPop(req, res){
     } catch (e) {
       console.error(e);
       res.sendStatus(500);
-      console.log(new Date().toLocaleString(),"Actually, uhh, i think you'll find that, uh, that's just wrong because i would be right in this situation.");
+      console.log(new Date().toLocaleString(),"Error with request");
     }
   }
   else {
     res.sendStatus(500);
-    console.log(new Date().toLocaleString(),"Actually, uhh, i think you'll find that, uh, that's just wrong because i would be right in this situation.");
+    console.log(new Date().toLocaleString(),"Error with request");
   }
 }
 
@@ -180,7 +180,7 @@ async function postWealth(req, res){
     } catch (e) {
       console.error(e);
       res.sendStatus(500);
-      console.log(new Date().toLocaleString(),"Actually, uhh, i think you'll find that, uh, that's just wrong because i would be right in this situation.");
+      console.log(new Date().toLocaleString(),"Error with request");
     }
   }
   else if (req.body.modifier == "0") {
@@ -200,12 +200,12 @@ async function postWealth(req, res){
     } catch (e) {
       console.error(e);
       res.sendStatus(500);
-      console.log(new Date().toLocaleString(),"Actually, uhh, i think you'll find that, uh, that's just wrong because i would be right in this situation.");
+      console.log(new Date().toLocaleString(),"Error with request");
     }
   }
   else {
     res.sendStatus(500);
-    console.log(new Date().toLocaleString(),"Actually, uhh, i think you'll find that, uh, that's just wrong because i would be right in this situation.");
+    console.log(new Date().toLocaleString(),"Error with request");
   }
 }
 
